@@ -1,0 +1,15 @@
+-r base.txt
+
+# Production server
+gunicorn==23.0.0
+whitenoise[brotli]==6.8.2
+
+# Monitoring
+sentry-sdk[django]==2.19.2
+
+# Testing (for CI/CD)
+pytest==8.3.4
+pytest-django==4.9.0
+pytest-cov==6.0.0
+factory-boy==3.3.1
+Faker==33.3.0

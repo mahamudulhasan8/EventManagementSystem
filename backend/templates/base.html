@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Evently - Smart Event Management System{% endblock %}</title>
+    <!-- Tailwind CSS (CDN for prototype, replace with build process for production if desired) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            // Add custom colors as needed
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center gap-2">
+                        <div class="bg-indigo-600 rounded p-1">
+                            <i data-lucide="ticket" class="h-5 w-5 text-white"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900">Evently</span>
+                    </a>
+                    
+                    <div class="hidden sm:ml-10 sm:flex sm:space-x-8">
+                        <a href="{% url 'home' %}" class="text-gray-900 hover:text-indigo-600 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors">Home</a>
+                        <a href="{% url 'event_list' %}" class="text-gray-500 hover:text-indigo-600 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors">Events</a>
+                        <a href="#" class="text-gray-500 hover:text-indigo-600 inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors">Categories</a>
+                    </div>
+                </div>
+                
+                <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard_home' %}" class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Dashboard</a>
+                        <a href="{% url 'logout' %}" class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-gray-500 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Log In</a>
+                        <a href="{% url 'register' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-shadow shadow-md hover:shadow-lg">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="ticket" class="h-5 w-5 text-gray-400"></i>
+                <span class="text-gray-500 font-semibold text-sm">Evently</span>
+            </div>
+            <p class="text-gray-400 text-sm">© {% now "Y" %} Evently. All rights reserved.</p>
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-indigo-600"><i data-lucide="twitter" class="h-4 w-4"></i></a>
+                <a href="#" class="text-gray-400 hover:text-indigo-600"><i data-lucide="instagram" class="h-4 w-4"></i></a>
+                <a href="#" class="text-gray-400 hover:text-indigo-600"><i data-lucide="linkedin" class="h-4 w-4"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+      });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

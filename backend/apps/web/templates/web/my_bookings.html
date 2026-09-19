@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - Evently{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-12">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8">My Bookings</h1>
+        
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {% for order in orders %}
+            <div class="p-6 border-b border-gray-100 hover:bg-gray-50/50 transition-colors flex flex-col sm:flex-row gap-6">
+                <div class="w-full sm:w-32 h-32 bg-gray-200 rounded-xl flex-shrink-0 overflow-hidden">
+                    {% if order.event.cover_image %}
+                        <img src="{{ order.event.cover_image.url }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                            <i data-lucide="image" class="w-8 h-8"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900">{{ order.event.title }}</h3>
+                        {% if order.payment_status == 'COMPLETED' or order.payment_status == 'PAID' %}
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase">Confirmed</span>
+                        {% else %}
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full uppercase">{{ order.payment_status }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <p class="text-gray-500 text-sm mb-4 flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-4 h-4 text-indigo-500"></i>
+                        {{ order.event.start_datetime|date:"F d, Y • h:i A" }}
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                            <span class="text-gray-500">Order ID:</span>
+                            <span class="font-semibold text-gray-900">#{{ order.id }}</span>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                            <span class="text-gray-500">Tickets:</span>
+                            <span class="font-semibold text-gray-900">{{ order.items.count }}</span>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                            <span class="text-gray-500">Total Paid:</span>
+                            <span class="font-semibold text-gray-900">${{ order.total }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col justify-end gap-2 sm:w-40">
+                    <button class="w-full bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm flex items-center justify-center gap-2">
+                        <i data-lucide="qr-code" class="w-4 h-4"></i> View Ticket
+                    </button>
+                    <a href="{% url 'event_detail' order.event.slug %}" class="w-full text-center text-gray-500 hover:text-gray-700 text-sm font-medium py-2">
+                        Event Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="py-24 text-center">
+                <i data-lucide="ticket" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+                <h3 class="text-xl font-medium text-gray-900">No bookings yet</h3>
+                <p class="text-gray-500 mt-2 mb-6">You haven't purchased any tickets for upcoming events.</p>
+                <a href="{% url 'event_list' %}" class="inline-flex bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-md">
+                    Explore Events
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

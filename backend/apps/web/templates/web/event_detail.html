@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - Evently{% endblock %}
+
+{% block content %}
+<!-- Dark Header -->
+<div class="bg-indigo-950 py-16 relative overflow-hidden">
+    <!-- Optional background texture/image overlay -->
+    <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">{{ event.title }}</h1>
+        <div class="flex items-center text-indigo-200 text-sm gap-2 font-medium">
+            <a href="{% url 'home' %}" class="hover:text-white transition-colors">HOME</a>
+            <span>/</span>
+            <a href="{% url 'event_list' %}" class="hover:text-white transition-colors">EVENTS</a>
+            <span>/</span>
+            <span class="text-indigo-400">{{ event.title }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col lg:flex-row gap-12">
+        
+        <!-- Main Event Content -->
+        <div class="lg:w-2/3">
+            {% if event.cover_image %}
+                <img src="{{ event.cover_image.url }}" alt="{{ event.title }}" class="w-full h-[400px] object-cover rounded-3xl shadow-md mb-10">
+            {% else %}
+                <div class="w-full h-[400px] bg-gray-200 rounded-3xl shadow-md flex items-center justify-center text-gray-400 mb-10">
+                    <i data-lucide="image" class="w-20 h-20 opacity-50"></i>
+                </div>
+            {% endif %}
+            
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">About this Event</h2>
+            <div class="prose prose-indigo max-w-none text-gray-600 mb-10 leading-relaxed">
+                {{ event.description|linebreaks }}
+            </div>
+            
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Event Speakers</h2>
+            <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm mb-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">JD</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">John Doe</h4>
+                            <p class="text-sm text-gray-500">Keynote Speaker</p>
+                        </div>
+                    </div>
+                    <button class="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Details <i data-lucide="arrow-up-right" class="w-4 h-4 inline"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:w-1/3">
+            <div class="sticky top-24 space-y-6">
+                
+                <!-- Information Card -->
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-1 bg-indigo-600 rounded-full inline-block"></span>
+                        Information
+                    </h3>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="tag" class="w-5 h-5 text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Category</p>
+                                <p class="text-gray-900 font-medium">{{ event.category.name }}</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="calendar" class="w-5 h-5 text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Date</p>
+                                <p class="text-gray-900 font-medium">{{ event.start_datetime|date:"F d, Y" }}</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Time</p>
+                                <p class="text-gray-900 font-medium">{{ event.start_datetime|time:"h:i A" }} - {{ event.end_datetime|time:"h:i A" }}</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-indigo-500 mt-0.5"></i>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Location</p>
+                                <p class="text-gray-900 font-medium">{{ event.venue.name|default:"Online" }}</p>
+                                {% if event.venue.address %}
+                                    <p class="text-sm text-gray-500">{{ event.venue.address }}</p>
+                                {% endif %}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Registration Card -->
+                <div class="bg-white rounded-2xl shadow-xl shadow-indigo-500/10 border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                        <span class="w-8 h-1 bg-purple-500 rounded-full inline-block"></span>
+                        Registration
+                    </h3>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-2xl text-gray-900">
+                                {% if event.price == 0 %}Free{% else %}${{ event.price }}{% endif %}
+                            </span>
+                            <span class="text-sm font-medium text-gray-500 px-2 py-1 bg-white rounded-md border border-gray-200 shadow-sm">{{ event.tickets_available }} left</span>
+                        </div>
+                        <p class="text-sm text-gray-500">General Admission</p>
+                    </div>
+                    
+                    <form action="#" method="POST" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 bg-white shadow-sm">
+                            <span class="font-medium text-gray-700 text-sm">Quantity</span>
+                            <div class="flex items-center gap-4">
+                                <button type="button" class="text-gray-400 hover:text-indigo-600 transition-colors"><i data-lucide="minus-circle" class="w-5 h-5"></i></button>
+                                <span class="font-bold text-gray-900 w-4 text-center">1</span>
+                                <button type="button" class="text-gray-400 hover:text-indigo-600 transition-colors"><i data-lucide="plus-circle" class="w-5 h-5"></i></button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center py-2 px-1">
+                            <span class="text-sm font-bold text-gray-600 uppercase tracking-wide">Total Cost</span>
+                            <span class="text-xl font-bold text-indigo-600">
+                                {% if event.price == 0 %}Free{% else %}${{ event.price }}{% endif %}
+                            </span>
+                        </div>
+                        
+                        {% if user.is_authenticated %}
+                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-0.5 focus:ring-4 focus:ring-indigo-500/20">
+                                Purchase Now
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="block text-center w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all">
+                                Log in to Book
+                            </a>
+                        {% endif %}
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

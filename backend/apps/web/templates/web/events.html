@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - Evently{% endblock %}
+
+{% block content %}
+<!-- Dark Hero Section -->
+<div class="relative bg-gray-900 overflow-hidden">
+    <!-- Background Image placeholder -->
+    <div class="absolute inset-0 opacity-40">
+        <div class="w-full h-full bg-gradient-to-r from-indigo-900 to-purple-900 mix-blend-multiply"></div>
+        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-48 text-center sm:text-left">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight">
+            MADE FOR <br/>
+            THOSE <span class="text-indigo-400">WHO DO</span>
+        </h1>
+        <p class="mt-4 max-w-xl text-xl text-gray-300">
+            Find the perfect events to elevate your skills, connect with peers, and expand your horizons.
+        </p>
+    </div>
+</div>
+
+<!-- Search & Filter Bar (Overlapping) -->
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-16 z-20 mb-16">
+    <div class="bg-indigo-950/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-indigo-500/20 p-6 flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+            <label class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-2">Looking for</label>
+            <input type="text" placeholder="Event name or keyword..." class="w-full bg-transparent border-b border-indigo-500/30 text-white placeholder-indigo-300/50 focus:border-indigo-400 focus:outline-none py-2 transition-colors">
+        </div>
+        <div class="flex-1">
+            <label class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-2">In</label>
+            <input type="text" placeholder="Location..." class="w-full bg-transparent border-b border-indigo-500/30 text-white placeholder-indigo-300/50 focus:border-indigo-400 focus:outline-none py-2 transition-colors">
+        </div>
+        <div class="flex-1">
+            <label class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider mb-2">When</label>
+            <select class="w-full bg-transparent border-b border-indigo-500/30 text-white focus:border-indigo-400 focus:outline-none py-2 transition-colors appearance-none cursor-pointer">
+                <option class="text-gray-900">Any date</option>
+                <option class="text-gray-900">Today</option>
+                <option class="text-gray-900">This Weekend</option>
+                <option class="text-gray-900">Next Month</option>
+            </select>
+        </div>
+        <div class="flex items-end">
+            <button class="w-full md:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors shadow-lg shadow-indigo-500/25">
+                Search
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Events List -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+    <div class="flex justify-between items-end mb-10">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+        </div>
+        <div class="flex gap-4 hidden md:flex">
+            <select class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2">
+                <option>Weekdays</option>
+                <option>Weekends</option>
+            </select>
+            <select class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2">
+                <option>Any Category</option>
+                {% for category in categories %}
+                <option>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for event in events %}
+        <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col group relative cursor-pointer" onclick="window.location.href='{% url 'event_detail' event.slug %}'">
+            <!-- Floating Category Badge -->
+            <div class="absolute top-4 left-4 z-20">
+                <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold rounded-full shadow-sm">
+                    {{ event.category.name }}
+                </span>
+            </div>
+            
+            <div class="h-56 bg-gray-200 relative overflow-hidden">
+                {% if event.cover_image %}
+                    <img src="{{ event.cover_image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-100">
+                        <i data-lucide="image" class="w-12 h-12 mb-2"></i>
+                        <span class="text-sm">No Image</span>
+                    </div>
+                {% endif %}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <div class="p-6 flex-grow flex flex-col">
+                <div class="flex gap-4 items-start mb-4">
+                    <div class="flex flex-col items-center justify-center text-indigo-600 bg-indigo-50 rounded-xl px-3 py-2 flex-shrink-0">
+                        <span class="text-xs font-bold uppercase">{{ event.start_datetime|date:"M" }}</span>
+                        <span class="text-xl font-black leading-none">{{ event.start_datetime|date:"d" }}</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h3 class="text-xl font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-indigo-600 transition-colors">{{ event.title }}</h3>
+                        <p class="text-sm text-gray-500 mt-2 truncate flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i> {{ event.venue.name|default:"Online" }}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div class="font-bold text-lg text-gray-900">
+                        {% if event.price == 0 %}
+                            <span class="text-green-600">Free</span>
+                        {% else %}
+                            ${{ event.price }}
+                        {% endif %}
+                    </div>
+                    <div class="text-sm text-gray-500 font-medium">
+                        {{ event.tickets_available }} left
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-24 bg-white rounded-2xl border border-gray-100 border-dashed">
+            <i data-lucide="calendar-search" class="w-12 h-12 text-gray-300 mx-auto mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900">No events found</h3>
+            <p class="text-gray-500 mt-1">Try adjusting your filters or check back later.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
