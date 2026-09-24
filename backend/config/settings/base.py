@@ -191,3 +191,8 @@ FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
 
 TAX_RATE = config('TAX_RATE', default=0.00, cast=float)
 SERVICE_FEE_RATE = config('SERVICE_FEE_RATE', default=0.02, cast=float)
+
+# Authentication URLs
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
