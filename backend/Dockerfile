@@ -19,9 +19,9 @@ WORKDIR /app
 
 # Install Python dependencies
 COPY requirements/ requirements/
-ARG REQUIREMENTS_FILE=development.txt
+
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements/${REQUIREMENTS_FILE}
+    pip install --no-cache-dir -r requirements/production.txt
 
 # Copy project
 COPY . .
@@ -36,3 +36,5 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 8000
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
